@@ -2,6 +2,14 @@ library(shiny)
 library(tidyverse)
 library(leaflet)
 
+
+writings <- read_csv('https://github.com/wilfordwoodruff/Main-Data/raw/371f9cda2709a10c38735c5e7b5486384ebb3f65/data/derived/derived_data.csv') %>%
+  mutate(`First Date` = ymd(ifelse(is.na(`First Date`),substr(Dates,0,10),`First Date`)))
+
+clara_compiled <- read_csv('https://raw.githubusercontent.com/wilfordwoodruff/Main-Data/main/_docs/Clara_for_rshiny.csv')
+
+
+
 # Define UI for application that draws a histogram
 ui <- function(request) {
   fluidPage(
@@ -52,12 +60,6 @@ ui <- function(request) {
 
 server <- function(input, output) {
   
-  writings <- read_csv('https://github.com/wilfordwoodruff/Main-Data/raw/371f9cda2709a10c38735c5e7b5486384ebb3f65/data/derived/derived_data.csv') %>%
-    mutate(`First Date` = ymd(ifelse(is.na(`First Date`),substr(Dates,0,10),`First Date`)))
-  
-  clara_compiled <- read_csv('https://raw.githubusercontent.com/wilfordwoodruff/Main-Data/main/_docs/Clara_for_rshiny.csv')
-  
-  
   #Collect the values that will update over time
     selections <- reactiveValues()
     observe({
@@ -96,7 +98,7 @@ server <- function(input, output) {
     # creating leaflet graph
     leaflet() %>%
       addProviderTiles('CartoDB.Positron') %>%
-      setView(-98.5795, 39.8283, zoom = 3) %>%
+      setView(-98.5795, 39.8283, zoom = 4) %>% #zoom in?
       addCircles(data=selections$map_data, 
                  lng = selections$map_data$lng, 
                  lat = selections$map_data$lat, 
