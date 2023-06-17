@@ -1,0 +1,14 @@
+name: app_explore2
+title: app_explore
+username: dr_iggs
+account: dr_iggs
+server: shiny.byui.edu
+hostUrl: https://shiny.byui.edu/__api__
+appId: 2179
+bundleId: 4377
+url: https://shiny.byui.edu/content/68e7f860-69c6-4a70-9c09-44e7ad96d19d/
+when: 1687019317.66642
+lastSyncTime: 1687019317.66643
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Clara_for_rshiny.csv|README.md
