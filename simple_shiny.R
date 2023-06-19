@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(leaflet)
+library(DT)
 
 #downloaded for faster testing, use
 # https://github.com/wilfordwoodruff/Main-Data/raw/371f9cda2709a10c38735c5e7b5486384ebb3f65/data/derived/derived_data.csv
@@ -51,18 +52,21 @@ ui <- function(request) {
     mainPanel(
       tabsetPanel(
         tabPanel("Map of Locations",
+                 verbatimTextOutput("map_tab_describe"),
                  leafletOutput("claramap")
                  #Add download button for this
         ),
         
         tabPanel("Frequency & Usage",
+                 htmlOutput("time_tab_describe"),
                  fluidRow(
                    splitLayout(cellWidths=c("50%","50%"),
                                plotOutput("entry_frequency_map"),plotOutput("word_frequency_map"))
                  )
         ),
-        tabPanel("See Dataset",
-                 tableOutput("fiverows")
+        tabPanel("See Originals",
+                 htmlOutput("table_tab_describe"),
+                 DTOutput("fiverows")
                  #Add download for this
         )
         
@@ -116,11 +120,31 @@ server <- function(input, output) {
     }
     selections$map_palette <- colorBin(palette="YlGnBu", domain=selections$map_data$count,
                                          na.color="transparent", bins=selections$map_bins)
+
+# DATA-TABLE --------------------
+    selections$table_set <- selections$filtered_writing %>% 
+      select(`Short URL`,`First Date`,`Document Type`,`Word Count`) %>%
+      arrange(`First Date`)
     })
     
 #OUTPUTS------------------
-  output$fiverows <- renderTable({
-    head(selections$filtered_writing)
+  output$fiverows <- renderDT({
+    datatable(selections$table_set, options = list(
+      columnDefs = list(
+        list(
+          targets = 1:1,
+          render = JS(
+            "function(data, type, row, meta) {",
+            "  if (type === 'display') {",
+            "    return '<a href=\"' + data + '\" target=\"_blank\">' + data + '</a>';",
+            "  }",
+            "  return data;",
+            "}"
+          )
+        )
+      )
+    )
+    )
   })
   output$claramap <- renderLeaflet({
     # creating leaflet graph
@@ -155,6 +179,16 @@ server <- function(input, output) {
       scale_x_continuous(breaks=selections$decade_span,
                          labels=selections$decade_span) +
       theme(panel.grid.minor.x = element_blank())
+  })
+  output$map_tab_describe <- renderPrint({
+    cat(paste("What locations does Woodruff reference?",
+              "This is any place he mentions, whether he writes to them, about them, or from them.",
+              "Currently displays JOURNAL entries only.",sep="\n"))})
+  output$time_tab_describe <- renderUI({
+    HTML("Within the time period, this shows how much he wrote about this topic.<br>The left side shows the number of entries within each decade, while the right side shows the number of individual references.<br> ")
+  })
+  output$table_tab_describe <- renderUI({
+    HTML("This tab can redirect you back to the Wilford Woodruff Papers website.<br>This shows every page that matches your search on the left.<br>You can also sort by any of these columns if you want something specific.<br> ")
   })
   #4 download buttons, maybe 5 for dataset
 }
