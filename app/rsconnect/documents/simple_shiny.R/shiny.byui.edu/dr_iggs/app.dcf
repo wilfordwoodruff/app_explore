@@ -1,0 +1,13 @@
+name: app
+title: app
+username: dr_iggs
+account: dr_iggs
+server: shiny.byui.edu
+hostUrl: https://shiny.byui.edu/__api__
+appId: 2184
+bundleId: 4383
+url: https://shiny.byui.edu/content/88964870-42cb-4ad7-96e1-30409b71ba6f/
+when: 1687210325.86205
+lastSyncTime: 1687210325.86207
+asMultiple: FALSE
+asStatic: FALSE
