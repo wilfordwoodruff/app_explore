@@ -6,13 +6,13 @@ library(DT)
 #downloaded for faster testing, use
 # https://github.com/wilfordwoodruff/Main-Data/raw/371f9cda2709a10c38735c5e7b5486384ebb3f65/data/derived/derived_data.csv
 # C:/Users/spenc/Downloads/derived_data.csv
-writings <- read_csv('https://github.com/wilfordwoodruff/Main-Data/raw/371f9cda2709a10c38735c5e7b5486384ebb3f65/data/derived/derived_data.csv') %>%
+writings <- read_csv("https://github.com/wilfordwoodruff/Main-Data/raw/371f9cda2709a10c38735c5e7b5486384ebb3f65/data/derived/derived_data.csv") %>%
   mutate(`First Date` = ymd(ifelse(is.na(`First Date`),substr(Dates,0,10),`First Date`)))
 
 floor_decade <- function(value){ return(value - value %% 10) }
 
-
-clara_compiled <- read_csv('https://raw.githubusercontent.com/wilfordwoodruff/Main-Data/main/_docs/Clara_for_rshiny.csv')
+#C:/Users/spenc/Documents/GitHub/app_explore/Clara_for_rshiny.csv
+clara_compiled <- read_csv("https://raw.githubusercontent.com/wilfordwoodruff/app_explore/main/Clara_for_rshiny.csv")
 
 
 
